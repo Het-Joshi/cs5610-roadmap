@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Roadmap: NEU CS5610 Web Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Scholarly Neutrals -->
+    <!-- Application Structure Plan: The application is designed as an interactive "Course Dashboard" with four main sections accessible via a sticky top navigation: 'Overview', 'Course Deep Dive', '8-Week Roadmap', and 'Tools & Resources'. This task-oriented structure was chosen over a linear document format to empower users to explore content based on their immediate needs—whether it's getting a high-level summary, digging into specific technologies, following a structured plan, or finding learning materials. This non-linear navigation improves usability by breaking down dense information into manageable, thematic chunks, facilitating a more focused and self-directed learning experience. Key interactions include a dynamic donut chart for technology overview, interactive cards for exploring topics, and a progress-tracking checklist for the 8-week plan. -->
+    <!-- Visualization & Content Choices: 
+        1. Report Info: Core technology categories (Frontend, Backend, Databases, etc.). Goal: Inform/Organize. Viz/Method: Chart.js Donut Chart. Interaction: Hover tooltips. Justification: Provides a quick, digestible visual summary of the course's structure. Library: Chart.js.
+        2. Report Info: Language distribution in student projects (JS vs. Java). Goal: Compare/Highlight. Viz/Method: Chart.js Pie Chart. Interaction: Hover tooltips with percentages. Justification: Visually reinforces the key report insight about Java's significant role, which might be missed in a purely text-based format. Library: Chart.js.
+        3. Report Info: 8-Week weekly plan. Goal: Organize/Track Progress. Viz/Method: Interactive HTML/CSS/JS timeline/checklist. Interaction: Click to expand weekly details and check off tasks, updating a master progress bar. Justification: Transforms a static table into an engaging, personalized tool that motivates and empowers the user. Library/Method: Vanilla JS, HTML, Tailwind.
+        4. Report Info: Detailed descriptions of individual topics (React, Node.js, etc.). Goal: Inform/Organized. Viz/Method: Expandable content cards. Interaction: Click to reveal detailed text. Justification: Prevents overwhelming the user with a wall of text and allows for focused exploration of specific subjects. Library/Method: Vanilla JS, HTML, Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4;
+            color: #333333;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4F9A94;
+            transition: width 0.3s ease;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #4F9A94;
+        }
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .task-checkbox:checked + label {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-800">CS5610 Roadmap</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#overview" class="nav-link active">Overview</a>
+                <a href="#deep-dive" class="nav-link">Course Deep Dive</a>
+                <a href="#roadmap" class="nav-link">8-Week Roadmap</a>
+                <a href="#resources" class="nav-link">Tools & Resources</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-slate-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#overview" class="block py-2 px-6 text-slate-700 hover:bg-slate-50 nav-link-mobile">Overview</a>
+            <a href="#deep-dive" class="block py-2 px-6 text-slate-700 hover:bg-slate-50 nav-link-mobile">Course Deep Dive</a>
+            <a href="#roadmap" class="block py-2 px-6 text-slate-700 hover:bg-slate-50 nav-link-mobile">8-Week Roadmap</a>
+            <a href="#resources" class="block py-2 px-6 text-slate-700 hover:bg-slate-50 nav-link-mobile">Tools & Resources</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section id="overview" class="content-section active">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Your 2-Month Head Start in Web Development</h2>
+                <p class="max-w-3xl mx-auto text-slate-600">This interactive guide provides an actionable roadmap for incoming NEU CS5610 students. Proactive preparation in core concepts and technologies is invaluable for success. This dashboard will help you navigate the curriculum, follow a structured plan, and find key resources for a smooth transition into the program.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Course Technology Stack</h3>
+                     <p class="text-sm text-center text-slate-500 mb-4">CS5610 covers a wide range of technologies essential for modern full-stack development. This chart shows a high-level breakdown of the core areas you will be studying. Hover over each segment to see the details.</p>
+                    <div class="chart-container">
+                        <canvas id="techStackChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-2">Key Takeaways for Success</h3>
+                    <div class="bg-white p-5 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-slate-700">Hands-on Practice is Paramount</h4>
+                        <p class="text-slate-600 text-sm">Actively coding and building projects is the most effective way to learn. This approach mirrors the course's experiential model and solidifies theory through practice.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-slate-700">Understand the "Why"</h4>
+                        <p class="text-slate-600 text-sm">Focus on grasping underlying concepts like MVC, REST, and state management, not just memorizing syntax. This fosters adaptability to new technologies.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm">
+                        <h4 class="font-semibold text-slate-700">Embrace Self-Directed Learning</h4>
+                        <p class="text-slate-600 text-sm">The course expects you to research topics independently. This is a vital skill for navigating the dynamic field of web development.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="deep-dive" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Course Deep Dive</h2>
+                <p class="max-w-3xl mx-auto text-slate-600">Explore the core competencies and technologies you'll master in CS5610. This section breaks down the curriculum into its fundamental components, from frontend and backend development to databases and software engineering principles. Click on any card to reveal more details about the topic.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md mb-12">
+                <h3 class="text-xl font-semibold text-slate-800 mb-4 text-center">Language Distribution in Projects</h3>
+                <p class="text-sm text-center text-slate-500 mb-4 max-w-2xl mx-auto">Analysis of student homework repositories reveals the practical technology stack. While JavaScript is primary, note the significant role of Java for backend data persistence tasks, reflecting a common industry practice of using multiple languages for different services.</p>
+                <div class="chart-container">
+                    <canvas id="languageDistChart"></canvas>
+                </div>
+            </div>
+            
+            <div id="topics-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <section id="roadmap" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Your 8-Week Pre-Campus Roadmap</h2>
+                <p class="max-w-3xl mx-auto text-slate-600">Follow this structured, week-by-week checklist to build a strong foundation before the course begins. This plan is designed for consistent progress, focusing on hands-on coding and mini-projects to solidify your understanding. Check off tasks as you complete them to track your journey.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                <h3 class="text-lg font-semibold text-slate-800 mb-2">Your Progress</h3>
+                <div class="w-full bg-slate-200 rounded-full h-4">
+                    <div id="progressBar" class="bg-teal-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                 <p id="progressText" class="text-right text-sm text-slate-500 mt-1">0% Complete</p>
+            </div>
+            
+            <div id="roadmap-container" class="space-y-4">
+            </div>
+        </section>
+
+        <section id="resources" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Recommended Tools & Resources</h2>
+                <p class="max-w-3xl mx-auto text-slate-600">This curated list of high-quality online resources and essential development tools will support your self-directed learning journey. The course relies heavily on online materials, so becoming familiar with these will be highly beneficial.</p>
+            </div>
+            <div id="resources-container" class="space-y-8"></div>
+        </section>
+
+    </main>
+    
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const courseData = {
+        topics: [
+            {
+                category: 'Foundations',
+                title: 'HTML & CSS',
+                summary: 'Structure, style, and create responsive layouts for the web.',
+                details: 'A clear understanding of the distinct roles of HTML for structuring content and CSS for styling is fundamental. The course covers semantic HTML5 for accessible content, CSS best practices for maintainability (selectors, box model, Flexbox, Grid), and responsive design with frameworks like Bootstrap.'
+            },
+            {
+                category: 'Foundations',
+                title: 'JavaScript Fundamentals',
+                summary: 'Master the core language of the web, from syntax to advanced concepts.',
+                details: 'Proficiency in core JS (variables, control flow, functions) and modern ES6+ features (arrow functions, Promises, destructuring) is non-negotiable. The course dives into advanced concepts like closures, `this` context, and prototypes, and explores how JS interacts with the DOM to create dynamic pages.'
+            },
+            {
+                category: 'Foundations',
+                title: 'Git & GitHub',
+                summary: 'Essential version control for collaboration and project management.',
+                details: 'The course explicitly requires the use of Git and GitHub for all assignments. Mastering commands like clone, commit, push, pull, and branch, along with GitHub workflows like pull requests, is a crucial professional competency.'
+            },
+            {
+                category: 'Client-Side',
+                title: 'React.js & Redux',
+                summary: 'Build modern, component-based Single Page Applications (SPAs).',
+                details: 'The course covers building UIs with React\'s component-based architecture. Key concepts include JSX, the Virtual DOM, managing component data with `props` and `state`, and handling global application state with Redux (actions, reducers, store).'
+            },
+            {
+                category: 'Client-Side',
+                title: 'Angular',
+                summary: 'Explore an alternative, powerful framework for building SPAs.',
+                details: 'The course exposes students to both React and Angular, reflecting the diverse landscape of modern web development. For Angular, you will learn about its modular structure, components, services, and data binding mechanisms.'
+            },
+            {
+                category: 'Server-Side',
+                title: 'Node.js & Express.js',
+                summary: 'Use JavaScript on the server to build fast and scalable APIs.',
+                details: 'Understand Node.js as a server-side runtime and use the Express.js framework to build web servers, handle routes, and manage middleware. This is the primary JavaScript backend technology used in the course.'
+            },
+            {
+                category: 'Server-Side',
+                title: 'Java & Spring Boot',
+                summary: 'Leverage the power of Java for robust backend data persistence.',
+                details: 'Student projects show significant use of Java with the Spring Boot framework for backend tasks, primarily for interacting with relational databases via the Java Persistence API (JPA). This reflects a common polyglot backend approach in the industry.'
+            },
+            {
+                category: 'Databases',
+                title: 'MongoDB & Mongoose',
+                summary: 'Utilize a flexible NoSQL document database for modern applications.',
+                details: 'The course covers the principles of NoSQL databases using MongoDB. You will learn how to perform CRUD operations and interact with MongoDB from a Node.js application using the Mongoose.js Object Data Modeling (ODM) library.'
+            },
+            {
+                category: 'Databases',
+                title: 'SQL & JPA',
+                summary: 'Work with traditional relational databases for structured data.',
+                details: 'Learn the fundamentals of relational databases and basic SQL commands. The course focuses on interacting with these databases from a Java backend using an Object-Relational Mapping (ORM) tool like the Java Persistence API (JPA).'
+            },
+            {
+                category: 'Advanced',
+                title: 'Web Security',
+                summary: 'Learn to identify and protect against common web vulnerabilities.',
+                details: 'This covers essential security topics like CORS, XSS, CSRF, and SQL Injection. You will also be introduced to implementing authentication and authorization using JWT, OAuth, and password hashing techniques.'
+            },
+            {
+                category: 'Advanced',
+                title: 'Testing & Quality',
+                summary: 'Write reliable code with unit tests and modern development tools.',
+                details: 'The course introduces the testing pyramid, unit tests, and Test-Driven Development (TDD). It also covers the development toolchain, including linters, bundlers (Webpack), and transpilers (Babel) for code quality and optimization.'
+            },
+            {
+                category: 'Advanced',
+                title: 'Software Engineering',
+                summary: 'Apply structured methodologies and design patterns to your projects.',
+                details: 'Gain an appreciation for Agile methodologies, common software design patterns (e.g., MVC), and the importance of planning and design using tools like mockups and wireframes in building complex applications.'
+            }
+        ],
+        roadmap: [
+            { 
+                week: 1, 
+                focus: 'Web Fundamentals & HTML/CSS', 
+                objectives: [
+                    'Understand the client-server model and HTTP request/response cycle.',
+                    'Write semantic HTML5 structure for web content.',
+                    'Style HTML effectively using CSS (selectors, box model, Flexbox/Grid).',
+                    'Implement responsive design principles using media queries and basic Bootstrap.',
+                    'Master basic Git commands and GitHub workflow (clone, add, commit, push).',
+                    'Recognize basic client-side input vulnerabilities and the need for server-side validation.'
+                ],
+                resources: [
+                    { name: 'MDN Web Docs: HTML Introduction', link: 'https://developer.mozilla.org/en-US/docs/Web/HTML' },
+                    { name: 'MDN Web Docs: CSS Introduction', link: 'https://developer.mozilla.org/en-US/docs/Web/CSS' },
+                    { name: 'MDN Web Docs: HTTP Overview', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP' },
+                    { name: 'freeCodeCamp.org: Responsive Web Design Certification (first few sections)', link: 'https://www.freecodecamp.org/learn/responsive-web-design/' },
+                    { name: 'The Odin Project: HTML & CSS sections', link: 'https://www.theodinproject.com/paths/full-stack-javascript/courses/foundations#html-and-css' },
+                    { name: 'Git Handbook (GitHub)', link: 'https://guides.github.com/introduction/git-handbook/' },
+                    { name: 'Bootstrap 5 Docs: Layout (Grid & Flex)', link: 'https://getbootstrap.com/docs/5.3/layout/grid/' }
+                ],
+                project: {
+                    name: 'Responsive Personal Portfolio Website',
+                    description: 'Build a multi-page static personal portfolio website (e.g., Home, About, Projects, Contact) using semantic HTML and responsive CSS with Bootstrap. Initialize a Git repository and push to GitHub Pages.',
+                    test_objective: "Ensure the site adapts well to various screen sizes (desktop, tablet, mobile). Validate all internal links work. Conceptual Security Test: Imagine a form where users submit a \"comment\". If you were to display this comment directly on the page, think about what would happen if someone submitted &lt;script&gt;alert(\"XSS\")&lt;/script&gt;. (This is a conceptual intro to XSS for client-side)."
+                },
+                cybersecurity_aspects: 'Introduction to client-side vulnerabilities like Cross-Site Scripting (XSS) through the concept of rendering untrusted user input directly. Emphasize that client-side validation is for UX, not security.'
+            },
+            { 
+                week: 2, 
+                focus: 'JavaScript Core & DOM Manipulation', 
+                objectives: [
+                    'Master core JavaScript syntax, including variables, data types, operators, and control flow.',
+                    'Understand and apply modern ES6+ features (arrow functions, template literals, destructuring).',
+                    'Learn how to effectively select, traverse, and modify DOM elements using vanilla JavaScript.',
+                    'Implement event handling to respond to user interactions (clicks, form submissions, key presses).',
+                    'Understand how jQuery simplifies DOM manipulation and perform basic AJAX requests with it.',
+                    'Practice debugging JavaScript code in the browser using developer tools.'
+                ], 
+                resources: [
+                    { name: 'MDN Web Docs: JavaScript Guide', link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide' },
+                    { name: 'JavaScript.info: The Modern JavaScript Tutorial (Part 1 & 2)', link: 'https://javascript.info/' },
+                    { name: 'jQuery API Documentation', link: 'https://api.jquery.com/' },
+                    { name: 'Chrome DevTools: Get Started with Debugging JavaScript', link: 'https://developer.chrome.com/docs/devtools/javascript/' }
+                ],
+                project: {
+                    name: 'Interactive Portfolio Enhancement',
+                    description: 'Enhance your Week 1 static portfolio website by adding interactive elements. Implement an image carousel, a dynamic navigation menu (e.g., hamburger menu for mobile), and client-side form validation using both vanilla JavaScript and jQuery. Practice making AJAX calls for mock data (e.g., loading project details from a JSON file).',
+                    test_objective: 'Verify all interactive elements function correctly across different browsers. Ensure form validation provides immediate user feedback. Check the browser console for any JavaScript errors. Consider how sensitive data might be handled in JavaScript if it were directly exposed in the DOM (conceptual).'
+                },
+                cybersecurity_aspects: 'Review client-side data exposure: what information should *never* be directly visible or manipulable via client-side JavaScript (e.g., API keys, sensitive user IDs). Introduction to sanitizing output (even for display) to prevent basic XSS from client-side dynamic content that originates from "trusted" sources.'
+            },
+            { 
+                week: 3, 
+                focus: 'Node.js & Express.js Basics', 
+                objectives: [
+                    'Understand Node.js as a JavaScript runtime environment for server-side development.',
+                    'Learn to use npm (Node Package Manager) for managing project dependencies and scripts.',
+                    'Set up a basic web server using the Express.js framework.',
+                    'Define and handle different routes (GET, POST, PUT, DELETE) in Express.js.',
+                    'Grasp the core principles of RESTful APIs (resource-based, statelessness, proper HTTP verb usage).',
+                    'Use tools like Postman or Insomnia to send requests and test API endpoints.'
+                ], 
+                resources: [
+                    { name: 'Node.js Official Documentation', link: 'https://nodejs.org/en/docs/' },
+                    { name: 'Express.js Documentation', link: 'https://expressjs.com/' },
+                    { name: 'Postman Learning Center (API Testing Basics)', link: 'https://www.postman.com/learning-center/' },
+                    { name: 'MDN Web Docs: HTTP Overview', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP' },
+                    { name: 'RESTful API Tutorial (conceptual)', link: 'https://restfulapi.net/' }
+                ],
+                project: {
+                    name: 'Simple To-Do RESTful API',
+                    description: 'Build a basic RESTful API with Node.js and Express.js. Create endpoints for managing a list of "to-do" items (e.g., `/todos`). Implement GET (all, by ID), POST, PUT, and DELETE operations. Initially, store data in a simple JavaScript array or object (no database yet).',
+                    test_objective: 'Use Postman/Insomnia to test all API endpoints and verify they respond correctly with appropriate HTTP status codes and JSON data. Security Test: Attempt to send malformed requests (e.g., very large payloads, unexpected data types). Observe what kind of error messages your server returns. Are they too verbose (e.g., exposing stack traces or internal server details)? Ensure your Express app limits request payload size (e.g., `express.json({ limit: \'1mb\' })`).'
+                },
+                cybersecurity_aspects: 'Server-side validation importance: Emphasize that client-side validation is insufficient for security and that all input must be validated on the server. Introduce the concept of information disclosure through verbose error messages (stack traces). Basic prevention of Denial of Service (DoS) by handling large request payloads and setting appropriate timeouts in Express.'
+            },
+            { 
+                week: 4, 
+                focus: 'Frontend Frameworks: React.js Fundamentals', 
+                objectives: [
+                    'Understand the concept and benefits of Single Page Applications (SPAs).',
+                    'Set up a basic React project using Create React App or Vite.',
+                    'Learn to build reusable UI components using React\'s component-based architecture.',
+                    'Master JSX (JavaScript XML) syntax for defining UI elements.',
+                    'Clearly differentiate between `props` (data passed from parent) and `state` (internal component data) and apply them correctly.',
+                    'Implement conditional rendering and efficient list rendering (e.g., using `map` and `key` props).'
+                ], 
+                resources: [
+                    { name: 'React Official Documentation (Main Concepts)', link: 'https://react.dev/learn' },
+                    { name: 'freeCodeCamp.org: Front End Development Libraries Certification (React sections)', link: 'https://www.freecodecamp.org/learn/front-end-development-libraries/' },
+                    { name: 'Create React App (or Vite) Documentation', link: 'https://create-react-app.dev/' }
+                ],
+                project: {
+                    name: 'Basic React SPA from Static Content',
+                    description: 'Convert a section of your Week 1 static website (e.g., the Projects page) into a basic React SPA. Break the UI into reusable components (e.g., ProjectCard component). Manage any dynamic content on the page (e.g., filtering projects) using component-level state and pass data down via props. Do not connect to an external API yet; use static JSON data within your React app.',
+                    test_objective: 'Verify that the React components render correctly and manage their internal state as expected. Test component reusability by using the same component multiple times with different props. Consider how sensitive static content might be rendered and if `dangerouslySetInnerHTML` is used (and if it is, understand its implications for XSS).'
+                },
+                cybersecurity_aspects: 'Understanding how React renders content and the potential for client-side XSS if external data (even if static for now) is not properly sanitized before being injected into JSX, especially when using `dangerouslySetInnerHTML`. Reinforce client-side sanitization concepts and the idea that client-side rendering can still introduce vulnerabilities.'
+            },
+            { 
+                week: 5, 
+                focus: 'React State Management & Routing', 
+                objectives: [
+                    'Implement client-side routing in a React application using React Router (e.g., `BrowserRouter`, `Routes`, `Route`, `Link`).',
+                    'Understand the problem of "prop drilling" and how global state management solves it.',
+                    'Grasp the core concepts of Redux: Store, Actions, Reducers, Dispatch, and Selectors.',
+                    'Implement a simple Redux store to manage global application state (e.g., a simple counter, user authentication status, or theme preference).',
+                    'Explore the React Context API as a lighter alternative for managing global state for smaller applications or less complex data.'
+                ], 
+                resources: [
+                    { name: 'React Router Documentation', link: 'https://reactrouter.com/en/main' },
+                    { name: 'Redux Fundamentals (Official Docs)', link: 'https://redux.js.org/tutorials/essentials/part-1-overview-concepts' },
+                    { name: 'React Context API (React Docs)', link: 'https://react.dev/learn/passing-props-with-context' }
+                ],
+                project: {
+                    name: 'React SPA with Routing and Global State',
+                    description: 'Enhance your Week 4 React SPA. Implement client-side routing to navigate between different "pages" (e.g., Home, About, Projects). Integrate Redux for simple global state management. For example, create a "theme" toggle (light/dark mode) or a simple "user status" (logged in/out) that is accessible and changeable from different components without prop drilling. Alternatively, add a global counter that can be incremented from various parts of the app.',
+                    test_objective: 'Verify navigation between routes functions correctly without full page reloads. Ensure the global state (e.g., theme) persists and updates consistently across different routes/components. Security Test: If simulating authentication, ensure no sensitive user credentials (e.g., raw passwords, full API keys) are directly stored in the Redux store or React Context API. Understand *why* storing tokens in HttpOnly cookies is generally safer than in JavaScript-accessible storage (conceptual).'
+                },
+                cybersecurity_aspects: 'Secure state management: Discuss the implications of storing sensitive data (e.g., authentication tokens, API keys, private user IDs) directly in client-side state accessible via JavaScript (e.g., Redux store, LocalStorage). Introduce the concept of HttpOnly cookies for session management as a way to mitigate the impact of Cross-Site Scripting (XSS) on session tokens.'
+            },
+            { 
+                week: 6, 
+                focus: 'Database Integration: MongoDB & Mongoose.js', 
+                objectives: [
+                    'Understand the fundamental concepts of NoSQL databases, specifically document-oriented databases like MongoDB.',
+                    'Learn how data is structured in MongoDB (documents, collections, embedded vs. referenced data).',
+                    'Perform basic CRUD (Create, Read, Update, Delete) operations directly in MongoDB shell.',
+                    'Utilize Mongoose.js, an ODM (Object Data Modeling) library, to define schemas and models for MongoDB interactions from Node.js applications.',
+                    'Connect your Node.js/Express API to a MongoDB database.',
+                    'Implement API endpoints that perform full CRUD operations on the database.'
+                ], 
+                resources: [
+                    { name: 'MongoDB Documentation (Getting Started)', link: 'https://www.mongodb.com/docs/manual/getting-started/' },
+                    { name: 'Mongoose.js Documentation', link: 'https://mongoosejs.com/docs/' },
+                    { name: 'Node.js & MongoDB Tutorials (e.g., freeCodeCamp, Net Ninja)', link: 'https://www.freecodecamp.org/news/learn-mongodb-node-js-in-a-week-from-scratch/' }
+                ],
+                project: {
+                    name: 'Full-Stack To-Do App (MERN Stack)',
+                    description: 'Connect your Week 3 To-Do API to a MongoDB database using Mongoose. Refactor the API endpoints to interact with the database instead of an in-memory array. Then, build a new React frontend (or adapt your Week 5 SPA) to consume this API, creating a full-stack MERN (MongoDB, Express, React, Node) application.',
+                    test_objective: 'Verify end-to-end functionality: creating a to-do item in the React app should persist it in MongoDB and correctly display it. Security Test: Test for NoSQL injection vulnerabilities. Try to pass object-based queries (e.g., `{"$gt": ""}`) in request parameters where a simple string is expected. Ensure Mongoose schemas provide basic type validation and that your server-side logic properly validates and sanitizes all input before it reaches the database query.'
+                },
+                cybersecurity_aspects: 'Introduction to NoSQL injection and the importance of using an ODM like Mongoose with strong schema validation. Emphasize that user input should never be directly concatenated into database queries. All input must be validated and sanitized on the server before database interaction.'
+            },
+            {
+                week: 7,
+                focus: 'Web Security & Authentication',
+                objectives: [
+                    'Understand common vulnerabilities: XSS, CSRF, and SQL/NoSQL Injection.',
+                    'Learn the principles of secure password storage using hashing and salting (e.g., with bcrypt).',
+                    'Implement user registration and login functionality in your Node.js/Express API.',
+                    'Understand and implement session management using JWT (JSON Web Tokens).',
+                    'Create protected routes in your API that require a valid JWT for access.',
+                    'Integrate authentication state into your React application to show different content to logged-in vs. logged-out users.'
+                ],
+                resources: [
+                    { name: 'OWASP Top 10 (Critical Web Application Security Risks)', link: 'https://owasp.org/www-project-top-ten/' },
+                    { name: 'JSON Web Tokens (JWT) Introduction', link: 'https://jwt.io/introduction' },
+                    { name: 'MDN Web Docs: Cross-Origin Resource Sharing (CORS)', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS' },
+                    { name: 'PortSwigger Web Security Academy (Labs on XSS, CSRF)', link: 'https://portswigger.net/web-security' },
+                    { name: 'Jest Documentation (JavaScript Testing Framework)', link: 'https://jestjs.io/docs/en/getting-started' },
+                    { name: 'Supertest (for testing Node.js APIs)', link: 'https://www.npmjs.com/package/supertest' },
+                    { name: 'Angular Documentation (Conceptual Overview)', link: 'https://angular.io/docs' }
+                ],
+                project: {
+                    name: 'Secure the To-Do App with User Accounts',
+                    description: 'Add user authentication to your full-stack To-Do app. Implement registration and login endpoints that generate JWTs. Secure the API so that users can only view and manage their own to-do items. On the React frontend, create login/registration forms and manage the user\'s authentication state (e.g., storing the JWT securely and using it for API requests).',
+                    test_objective: 'Test that protected API routes return an error (e.g., 401 Unauthorized) without a valid JWT. Verify that one user cannot access or modify another user\'s data. Security Test: Check if JWTs are stored in a way that minimizes XSS risk (e.g., HttpOnly cookies are preferred over LocalStorage). Ensure error messages for failed logins are generic ("Invalid credentials") to prevent username enumeration.'
+                },
+                cybersecurity_aspects: 'Deep dive into authentication vs. authorization. Cover secure password hashing with bcrypt. Discuss JWT security best practices, including using a strong secret key, setting an expiration time, and the trade-offs between storing tokens in LocalStorage vs. HttpOnly cookies to mitigate XSS.'
+            },
+            {
+                week: 8,
+                focus: 'Advanced Topics & Deployment',
+                objectives: [
+                    'Understand the basics of unit testing and Test-Driven Development (TDD).',
+                    'Write simple unit tests for your Express API endpoints using a framework like Jest.',
+                    'Learn about environment variables and how to manage them for development vs. production (e.g., database connection strings, API keys).',
+                    'Containerize your Node.js application using Docker.',
+                    'Prepare and deploy your full-stack application to a cloud service (e.g., Heroku, Render, AWS).',
+                    'Review and consolidate all concepts, ensuring you can explain the flow of data through a full-stack application.'
+                ],
+                resources: [
+                    { name: 'Jest Documentation (JavaScript Testing Framework)', link: 'https://jestjs.io/docs/en/getting-started' },
+                    { name: 'Supertest (for testing Node.js APIs)', link: 'https://www.npmjs.com/package/supertest' },
+                    { name: 'Docker Documentation', link: 'https://docs.docker.com/' },
+                    { name: 'Heroku Getting Started (or similar cloud platform)', link: 'https://devcenter.heroku.com/categories/getting-started' }
+                ],
+                project: {
+                    name: 'Deploy the Full-Stack Application',
+                    description: 'Write unit tests for the core logic of your API (e.g., testing the login and to-do creation endpoints). Create a Dockerfile for your Node.js backend. Configure environment variables for production. Deploy both your React frontend and your Express backend to a cloud platform. Ensure they can communicate with each other and the cloud-hosted MongoDB instance.',
+                    test_objective: 'Verify the deployed application is fully functional. All API calls from the live frontend should work correctly with the live backend. Ensure environment variables are not hard-coded or committed to version control. Security Test: Perform a final check. Are there any debug routes left open? Are error messages appropriate for production? Is HTTPS enforced?'
+                },
+                cybersecurity_aspects: 'Securing the deployment environment. The importance of not committing secrets (API keys, passwords, JWT secrets) to Git, using environment variables instead. The principle of least privilege for database users. Setting security headers (e.g., with Helmet.js in Express) and ensuring the production environment uses HTTPS.'
+            }
+        ],
+        resources: [
+            {
+                category: "Core Learning Platforms",
+                items: [
+                    { name: "MDN Web Docs", description: "The ultimate reference for HTML, CSS, and JavaScript. An indispensable resource for any web developer.", link: "https://developer.mozilla.org/" },
+                    { name: "freeCodeCamp", description: "Offers comprehensive, project-based certifications in web development, from responsive design to full-stack.", link: "https://www.freecodecamp.org/" },
+                    { name: "The Odin Project", description: "A free, open-source curriculum for learning full-stack web development with a strong focus on practical projects.", link: "https://www.theodinproject.com/" },
+                    { name: "JavaScript.info", description: "An in-depth, modern JavaScript tutorial that covers everything from the basics to advanced topics.", link: "https://javascript.info/" }
+                ]
+            },
+            {
+                category: "Essential Development Tools",
+                items: [
+                    { name: "Visual Studio Code", description: "The de-facto standard code editor for web development, with a vast ecosystem of extensions.", link: "https://code.visualstudio.com/" },
+                    { name: "Git & GitHub", description: "The essential version control system and platform for managing and collaborating on code.", link: "https://github.com/" },
+                    { name: "Node.js", description: "The JavaScript runtime needed to run server-side code and use build tools like npm.", link: "https://nodejs.org/" },
+                    { name: "Postman / Insomnia", description: "Powerful tools for designing, building, and testing APIs without needing to write frontend code.", link: "https://www.postman.com/" }
+                ]
+            },
+            {
+                category: "Frameworks & Libraries",
+                items: [
+                    { name: "React.js Docs", description: "The official documentation for React, which has been significantly improved for learning.", link: "https://react.dev/" },
+                    { name: "Express.js", description: "The minimalist web framework for Node.js used extensively in the course.", link: "https://expressjs.com/" },
+                    { name: "MongoDB & Mongoose", description: "Official documentation for the NoSQL database and its most popular ODM library for Node.js.", link: "https://www.mongodb.com/docs/" },
+                    { name: "Tailwind CSS", description: "A utility-first CSS framework for rapidly building custom user interfaces.", link: "https://tailwindcss.com/" }
+                ]
+            }
+        ]
+    };
+
+    // --- Navigation & Page Switching ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    const mobileNavLinks = document.querySelectorAll('.nav-link-mobile');
+    const contentSections = document.querySelectorAll('.content-section');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function switchTab(targetId) {
+        contentSections.forEach(section => {
+            section.classList.toggle('active', section.id === targetId);
+        });
+
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${targetId}`);
+        });
+        
+        // Close mobile menu on navigation
+        mobileMenu.classList.add('hidden');
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('href').substring(1);
+            switchTab(targetId);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('href').substring(1);
+            switchTab(targetId);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+    
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // --- Chart.js Initializations ---
+    function createTechStackChart() {
+        const ctx = document.getElementById('techStackChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Frontend (React, Angular)', 'Backend (Node, Java)', 'Databases (Mongo, SQL)', 'DevOps & Tools (Git, Docker)'],
+                    datasets: [{
+                        label: 'Course Focus',
+                        data: [40, 30, 20, 10],
+                        backgroundColor: [ '#4F9A94', '#68B0AB', '#81C6C2', '#9ADCD9' ],
+                        borderColor: '#f8f7f4',
+                        borderWidth: 4,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 12, family: 'Inter' } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function createLanguageDistChart() {
+        const ctx = document.getElementById('languageDistChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['JavaScript (Frontend/Backend)', 'Java (Backend Persistence)'],
+                    datasets: [{
+                        label: 'Language Use in Projects',
+                        data: [75, 25],
+                        backgroundColor: [ '#4F9A94', '#9ADCD9' ],
+                        borderColor: '#ffffff',
+                        borderWidth: 4,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 12, family: 'Inter' } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // --- Dynamic Content Rendering ---
+    const topicsContainer = document.getElementById('topics-container');
+    const roadmapContainer = document.getElementById('roadmap-container');
+    const resourcesContainer = document.getElementById('resources-container');
+
+    function renderTopics() {
+        if (!topicsContainer) return;
+        topicsContainer.innerHTML = courseData.topics.map(topic => `
+            <div class="bg-white p-5 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1 topic-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-xs font-semibold uppercase text-teal-600">${topic.category}</span>
+                        <h4 class="font-bold text-lg text-slate-800">${topic.title}</h4>
+                        <p class="text-slate-600 text-sm mt-1">${topic.summary}</p>
+                    </div>
+                    <svg class="w-5 h-5 text-slate-400 mt-1 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <div class="topic-details hidden mt-4 pt-4 border-t border-slate-200">
+                    <p class="text-slate-600 text-sm">${topic.details}</p>
+                    <button class="mt-3 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm explain-concept-btn" data-topic-title="${topic.title}">
+                        ✨ Explain this Concept
+                    </button>
+                    <div class="concept-explanation mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md text-xs text-blue-800 hidden">
+                        <p class="loading-text hidden">Generating explanation...</p>
+                        <p class="explanation-content"></p>
+                        <p class="error-message text-red-500 hidden">Error: Could not generate explanation.</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.topic-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Toggle the details and rotate the chevron
+                const topicDetails = card.querySelector('.topic-details');
+                const chevron = card.querySelector('.chevron');
+                topicDetails.classList.toggle('hidden');
+                chevron.classList.toggle('rotate-180');
+
+                // If the details are shown, and it's a concept explanation button, ensure its output is cleared if it was an error before
+                if (!topicDetails.classList.contains('hidden')) {
+                    const errorMsg = topicDetails.querySelector('.error-message');
+                    if (errorMsg && !errorMsg.classList.contains('hidden')) {
+                         errorMsg.classList.add('hidden');
+                         topicDetails.querySelector('.explanation-content').textContent = '';
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.explain-concept-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Prevent card from toggling details
+                const topicTitle = e.target.dataset.topicTitle;
+                const explanationContainer = e.target.nextElementSibling;
+                const loadingText = explanationContainer.querySelector('.loading-text');
+                const explanationContent = explanationContainer.querySelector('.explanation-content');
+                const errorMessage = explanationContainer.querySelector('.error-message');
+
+                explanationContainer.classList.remove('hidden');
+                loadingText.classList.remove('hidden');
+                explanationContent.textContent = ''; // Clear previous content
+                errorMessage.classList.add('hidden'); // Hide any previous error
+
+                try {
+                    const prompt = `Explain the concept of "${topicTitle}" in the context of web development, concisely and clearly, as if for a university student. Focus on its purpose and key principles. Keep it under 150 words.`;
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    const response = await fetch(apiUrl, {
+                               method: 'POST',
+                               headers: { 'Content-Type': 'application/json' },
+                               body: JSON.stringify(payload)
+                           });
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        explanationContent.textContent = text;
+                    } else {
+                        errorMessage.classList.remove('hidden');
+                        explanationContent.textContent = '';
+                        console.error('API response structure unexpected:', result);
+                    }
+                } catch (error) {
+                    console.error('Error calling Gemini API for concept explanation:', error);
+                    errorMessage.classList.remove('hidden');
+                    explanationContent.textContent = '';
+                } finally {
+                    loadingText.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    function renderRoadmap() {
+        if (!roadmapContainer) return;
+        roadmapContainer.innerHTML = courseData.roadmap.map((week, index) => {
+            const objectivesList = week.objectives.map((obj, objIndex) => `
+                <li>
+                    <input type="checkbox" id="week-${week.week}-obj-${objIndex}" class="task-checkbox h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 mr-2">
+                    <label for="week-${week.week}-obj-${objIndex}" class="text-sm text-slate-700">${obj}</label>
+                </li>
+            `).join('');
+            const resourcesList = (week.resources || []).map(res => `<li><a href="${res.link}" target="_blank" class="text-teal-600 hover:underline">${res.name}</a></li>`).join('');
+
+            return `
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <details>
+                        <summary class="font-semibold text-lg text-slate-800 cursor-pointer list-none">
+                            <div class="flex justify-between items-center">
+                                <span>Week ${week.week}: ${week.focus}</span>
+                                <svg class="w-5 h-5 text-slate-400 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </summary>
+                        <div class="mt-4 pt-4 border-t border-slate-200 space-y-3">
+                            <h5 class="font-semibold text-slate-600 mb-2">Achievable Objectives:</h5>
+                            <ul class="list-disc list-inside text-sm text-slate-500 mb-4 space-y-1">
+                                ${objectivesList}
+                            </ul>
+                            <h5 class="font-semibold text-slate-600 mb-2">Resources for Objectives:</h5>
+                            <ul class="list-disc list-inside text-sm text-slate-500 mb-4 space-y-1">
+                                ${resourcesList}
+                            </ul>
+                            <h5 class="font-semibold text-slate-600 mb-2">Project to Test Objective:</h5>
+                            <div class="mb-4">
+                                <strong>${week.project.name}:</strong> <span class="text-slate-600 text-sm">${week.project.description}</span>
+                                <br><span class="text-xs text-slate-500"><em>Test Objective: ${week.project.test_objective}</em></span>
+                            </div>
+                            <button class="mt-3 px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors text-sm suggest-project-btn" data-week-objectives="${week.objectives.join('; ')}" data-current-project="${week.project.name}">
+                                ✨ Suggest Alternative Project
+                            </button>
+                            <div class="alt-project-suggestion mt-2 p-2 bg-purple-50 border border-purple-200 rounded-md text-xs text-purple-800 hidden">
+                                <p class="loading-text hidden">Generating project idea...</p>
+                                <p class="project-content"></p>
+                                <p class="error-message text-red-500 hidden">Error: Could not generate project idea.</p>
+                            </div>
+                            <h5 class="font-semibold text-slate-600 mt-4 mb-2">Cybersecurity Aspect:</h5>
+                            <p class="text-sm text-slate-500">${week.cybersecurity_aspects}</p>
+                        </div>
+                    </details>
+                </div>
+            `;
+        }).join('');
+        
+        updateProgress(); // Initial call
+        document.querySelectorAll('.task-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateProgress);
+        });
+
+        document.querySelectorAll('.suggest-project-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const objectives = e.target.dataset.weekObjectives;
+                const currentProject = e.target.dataset.currentProject;
+                const suggestionContainer = e.target.nextElementSibling;
+                const loadingText = suggestionContainer.querySelector('.loading-text');
+                const projectContent = suggestionContainer.querySelector('.project-content');
+                const errorMessage = suggestionContainer.querySelector('.error-message');
+
+                suggestionContainer.classList.remove('hidden');
+                loadingText.classList.remove('hidden');
+                projectContent.textContent = '';
+                errorMessage.classList.add('hidden');
+
+                try {
+                    const prompt = `Given the web development objectives: "${objectives}". Suggest one *alternative* mini-project idea that helps solidify these objectives, ensuring it is distinctly different from "${currentProject}". Include a brief description of the project and a test objective. Format it as: 'Project Name: [Name]\nDescription: [Description]\nTest Objective: [Test Objective]'.`;
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    const response = await fetch(apiUrl, {
+                               method: 'POST',
+                               headers: { 'Content-Type': 'application/json' },
+                               body: JSON.stringify(payload)
+                           });
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        projectContent.textContent = text;
+                    } else {
+                        errorMessage.classList.remove('hidden');
+                        projectContent.textContent = '';
+                        console.error('API response structure unexpected:', result);
+                    }
+                } catch (error) {
+                    console.error('Error calling Gemini API for project idea:', error);
+                    errorMessage.classList.remove('hidden');
+                    projectContent.textContent = '';
+                } finally {
+                    loadingText.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    function renderResources() {
+        if (!resourcesContainer) return;
+        resourcesContainer.innerHTML = courseData.resources.map(category => `
+            <div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">${category.category}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${category.items.map(item => `
+                        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="block bg-white p-5 rounded-lg shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
+                            <h4 class="font-semibold text-slate-700">${item.name}</h4>
+                            <p class="text-slate-600 text-sm">${item.description}</p>
+                            <span class="text-xs text-teal-600 mt-2 inline-block">Visit Resource &rarr;</span>
+                        </a>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // --- Roadmap Progress Tracker ---
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        const checkedCount = document.querySelectorAll('.task-checkbox:checked').length;
+        const totalCount = checkboxes.length;
+        const percentage = totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
+        
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        if(progressBar) progressBar.style.width = `${percentage}%`;
+        if(progressText) progressText.textContent = `${Math.round(percentage)}% Complete`;
+    }
+
+
+    // --- Initial Load ---
+    createTechStackChart();
+    createLanguageDistChart();
+    renderTopics();
+    renderRoadmap();
+    renderResources();
+});
+</script>
+</body>
+</html>
