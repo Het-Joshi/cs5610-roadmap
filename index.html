@@ -9,16 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Author: Het Joshi -->
     
-    <!-- Chosen Palette: Scholarly Neutrals -->
-    <!-- Application Structure Plan: The application is designed as an interactive "Course Dashboard" with four main sections accessible via a sticky top navigation: 'Overview', 'Course Deep Dive', '8-Week Roadmap', and 'Tools & Resources'. This task-oriented structure was chosen over a linear document format to empower users to explore content based on their immediate needs—whether it's getting a high-level summary, digging into specific technologies, following a structured plan, or finding learning materials. This non-linear navigation improves usability by breaking down dense information into manageable, thematic chunks, facilitating a more focused and self-directed learning experience. Key interactions include a dynamic donut chart for technology overview, interactive cards for exploring topics, and a progress-tracking checklist for the 8-week plan. -->
-    <!-- Visualization & Content Choices: 
-        1. Report Info: Core technology categories (Frontend, Backend, Databases, etc.). Goal: Inform/Organize. Viz/Method: Chart.js Donut Chart. Interaction: Hover tooltips. Justification: Provides a quick, digestible visual summary of the course's structure. Library: Chart.js.
-        2. Report Info: Language distribution in student projects (JS vs. Java). Goal: Compare/Highlight. Viz/Method: Chart.js Pie Chart. Interaction: Hover tooltips with percentages. Justification: Visually reinforces the key report insight about Java's significant role, which might be missed in a purely text-based format. Library: Chart.js.
-        3. Report Info: 8-Week weekly plan. Goal: Organize/Track Progress. Viz/Method: Interactive HTML/CSS/JS timeline/checklist. Interaction: Click to expand weekly details and check off tasks, updating a master progress bar. Justification: Transforms a static table into an engaging, personalized tool that motivates and empowers the user. Library/Method: Vanilla JS, HTML, Tailwind.
-        4. Report Info: Detailed descriptions of individual topics (React, Node.js, etc.). Goal: Inform/Organized. Viz/Method: Expandable content cards. Interaction: Click to reveal detailed text. Justification: Prevents overwhelming the user with a wall of text and allows for focused exploration of specific subjects. Library/Method: Vanilla JS, HTML, Tailwind. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -205,22 +197,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 details: 'The course covers building UIs with React\'s component-based architecture. Key concepts include JSX, the Virtual DOM, managing component data with `props` and `state`, and handling global application state with Redux (actions, reducers, store).'
             },
             {
-                category: 'Client-Side',
-                title: 'Angular',
-                summary: 'Explore an alternative, powerful framework for building SPAs.',
-                details: 'The course exposes students to both React and Angular, reflecting the diverse landscape of modern web development. For Angular, you will learn about its modular structure, components, services, and data binding mechanisms.'
-            },
-            {
                 category: 'Server-Side',
                 title: 'Node.js & Express.js',
                 summary: 'Use JavaScript on the server to build fast and scalable APIs.',
                 details: 'Understand Node.js as a server-side runtime and use the Express.js framework to build web servers, handle routes, and manage middleware. This is the primary JavaScript backend technology used in the course.'
-            },
-            {
-                category: 'Server-Side',
-                title: 'Java & Spring Boot',
-                summary: 'Leverage the power of Java for robust backend data persistence.',
-                details: 'Student projects show significant use of Java with the Spring Boot framework for backend tasks, primarily for interacting with relational databases via the Java Persistence API (JPA). This reflects a common polyglot backend approach in the industry.'
             },
             {
                 category: 'Databases',
@@ -229,225 +209,233 @@ document.addEventListener('DOMContentLoaded', () => {
                 details: 'The course covers the principles of NoSQL databases using MongoDB. You will learn how to perform CRUD operations and interact with MongoDB from a Node.js application using the Mongoose.js Object Data Modeling (ODM) library.'
             },
             {
-                category: 'Databases',
-                title: 'SQL & JPA',
-                summary: 'Work with traditional relational databases for structured data.',
-                details: 'Learn the fundamentals of relational databases and basic SQL commands. The course focuses on interacting with these databases from a Java backend using an Object-Relational Mapping (ORM) tool like the Java Persistence API (JPA).'
-            },
-            {
-                category: 'Advanced',
-                title: 'Web Security',
+                category: 'Security',
+                title: 'Web Security Basics',
                 summary: 'Learn to identify and protect against common web vulnerabilities.',
-                details: 'This covers essential security topics like CORS, XSS, CSRF, and SQL Injection. You will also be introduced to implementing authentication and authorization using JWT, OAuth, and password hashing techniques.'
+                details: 'This covers essential security topics like CORS, XSS, CSRF, and SQL/NoSQL Injection. You will also be introduced to implementing authentication and authorization using JWT, OAuth, and password hashing techniques.'
             },
             {
-                category: 'Advanced',
+                category: 'Development Practices',
+                title: 'State Management in React',
+                summary: 'Manage data flow within components and across the application.',
+                details: 'Understand the difference between component state (`useState`) and application state (`Redux`). Learn about controlled components, two-way data binding, and how to handle user events to manage UI state effectively.'
+            },
+            {
+                category: 'Development Practices',
                 title: 'Testing & Quality',
                 summary: 'Write reliable code with unit tests and modern development tools.',
                 details: 'The course introduces the testing pyramid, unit tests, and Test-Driven Development (TDD). It also covers the development toolchain, including linters, bundlers (Webpack), and transpilers (Babel) for code quality and optimization.'
             },
             {
-                category: 'Advanced',
-                title: 'Software Engineering',
-                summary: 'Apply structured methodologies and design patterns to your projects.',
-                details: 'Gain an appreciation for Agile methodologies, common software design patterns (e.g., MVC), and the importance of planning and design using tools like mockups and wireframes in building complex applications.'
+                category: 'Deployment',
+                title: 'Deployment & DevOps Basics',
+                summary: 'Prepare and deploy full-stack applications to cloud platforms.',
+                details: 'Learn about environment variables, containerization with Docker, and deploying React frontends and Node.js backends to cloud services like Netlify and Render. Understand continuous integration principles.'
+            },
+             {
+                category: 'Software Engineering',
+                title: 'Single Page Applications (SPAs)',
+                summary: 'Understand and build modern web applications with React Router.',
+                details: 'Learn the architectural patterns behind SPAs, including client-side routing, dynamic content rendering, and how React components interact to create a seamless user experience without full page reloads.'
             }
         ],
         roadmap: [
             { 
                 week: 1, 
-                focus: 'Web Fundamentals & HTML/CSS', 
+                focus: 'Web Fundamentals & HTML/CSS (Chapter 1 & 2)', 
                 objectives: [
                     'Understand the client-server model and HTTP request/response cycle.',
-                    'Write semantic HTML5 structure for web content.',
+                    'Write semantic HTML5 structure for web content (headings, paragraphs, lists, tables, forms, images, anchors).',
                     'Style HTML effectively using CSS (selectors, box model, Flexbox/Grid).',
-                    'Implement responsive design principles using media queries and basic Bootstrap.',
+                    'Implement responsive design principles using media queries and basic Bootstrap (Containers, Grids, Responsive Tables).',
                     'Master basic Git commands and GitHub workflow (clone, add, commit, push).',
-                    'Recognize basic client-side input vulnerabilities and the need for server-side validation.'
+                    'Set up a React development environment using Vite.'
                 ],
                 resources: [
                     { name: 'MDN Web Docs: HTML Introduction', link: 'https://developer.mozilla.org/en-US/docs/Web/HTML' },
                     { name: 'MDN Web Docs: CSS Introduction', link: 'https://developer.mozilla.org/en-US/docs/Web/CSS' },
                     { name: 'MDN Web Docs: HTTP Overview', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP' },
-                    { name: 'freeCodeCamp.org: Responsive Web Design Certification (first few sections)', link: 'https://www.freecodecamp.org/learn/responsive-web-design/' },
-                    { name: 'The Odin Project: HTML & CSS sections', link: 'https://www.theodinproject.com/paths/full-stack-javascript/courses/foundations#html-and-css' },
+                    { name: 'freeCodeCamp.org: Responsive Web Design Certification', link: 'https://www.freecodecamp.org/learn/responsive-web-design/' },
                     { name: 'Git Handbook (GitHub)', link: 'https://guides.github.com/introduction/git-handbook/' },
-                    { name: 'Bootstrap 5 Docs: Layout (Grid & Flex)', link: 'https://getbootstrap.com/docs/5.3/layout/grid/' }
+                    { name: 'Bootstrap 5 Docs: Layout (Grid & Flex)', link: 'https://getbootstrap.com/docs/5.3/layout/grid/' },
+                    { name: 'React Icons', link: 'https://react-icons.github.io/react-icons/' }
                 ],
                 project: {
-                    name: 'Responsive Personal Portfolio Website',
-                    description: 'Build a multi-page static personal portfolio website (e.g., Home, About, Projects, Contact) using semantic HTML and responsive CSS with Bootstrap. Initialize a Git repository and push to GitHub Pages.',
-                    test_objective: "Ensure the site adapts well to various screen sizes (desktop, tablet, mobile). Validate all internal links work. Conceptual Security Test: Imagine a form where users submit a \"comment\". If you were to display this comment directly on the page, think about what would happen if someone submitted &lt;script&gt;alert(\"XSS\")&lt;/script&gt;. (This is a conceptual intro to XSS for client-side)."
+                    name: 'Kambaz HTML/CSS Prototype & Personal Portfolio',
+                    description: 'Develop a prototype of the Kambaz UI (Sign-in, Dashboard, Course, Modules, Assignments, Assignment Editor, People) using plain HTML, then apply custom CSS and Bootstrap to style and layout these screens responsively. Simultaneously, ensure your personal portfolio website (from previous instructions if any) meets basic HTML/CSS requirements and is deployed to Netlify via GitHub.',
+                    test_objective: "Ensure the Kambaz prototype adapts well to various screen sizes (desktop, tablet, mobile) and that the navigation links are functional. Verify all form elements render correctly. For your portfolio, ensure static content displays as intended and the site is publicly accessible."
                 },
-                cybersecurity_aspects: 'Introduction to client-side vulnerabilities like Cross-Site Scripting (XSS) through the concept of rendering untrusted user input directly. Emphasize that client-side validation is for UX, not security.'
+                cybersecurity_aspects: 'Introduction to client-side vulnerabilities: Understand how directly rendering untrusted user input (e.g., in text fields) can lead to Cross-Site Scripting (XSS) if not properly sanitized. Emphasize that client-side validation is for UX, not security. Best practices for hiding/showing content (e.g., using Bootstrap classes) and not relying on client-side hiding for sensitive information.'
             },
             { 
                 week: 2, 
-                focus: 'JavaScript Core & DOM Manipulation', 
+                focus: 'JavaScript Core & DOM Manipulation (Chapter 3)', 
                 objectives: [
-                    'Master core JavaScript syntax, including variables, data types, operators, and control flow.',
-                    'Understand and apply modern ES6+ features (arrow functions, template literals, destructuring).',
-                    'Learn how to effectively select, traverse, and modify DOM elements using vanilla JavaScript.',
-                    'Implement event handling to respond to user interactions (clicks, form submissions, key presses).',
-                    'Understand how jQuery simplifies DOM manipulation and perform basic AJAX requests with it.',
-                    'Practice debugging JavaScript code in the browser using developer tools.'
+                    'Master core JavaScript syntax (variables, data types, booleans, conditionals).',
+                    'Understand and apply modern ES6+ features (arrow functions, template literals, spread operator, destructuring).',
+                    'Manipulate JavaScript data structures (arrays, objects) and utilize array functions (map, find, filter, findIndex).',
+                    'Learn JSON and `JSON.stringify()` for data serialization.',
+                    'Practice dynamic styling in React using conditional classes and inline styles.',
+                    'Understand and implement `useLocation()` and `useParams()` hooks for client-side routing with path parameters.'
                 ], 
                 resources: [
                     { name: 'MDN Web Docs: JavaScript Guide', link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide' },
-                    { name: 'JavaScript.info: The Modern JavaScript Tutorial (Part 1 & 2)', link: 'https://javascript.info/' },
-                    { name: 'jQuery API Documentation', link: 'https://api.jquery.com/' },
-                    { name: 'Chrome DevTools: Get Started with Debugging JavaScript', link: 'https://developer.chrome.com/docs/devtools/javascript/' }
+                    { name: 'JavaScript.info: The Modern JavaScript Tutorial', link: 'https://javascript.info/' },
+                    { name: 'React Router Documentation', link: 'https://reactrouter.com/en/main' },
+                    { name: 'ES6 Features', link: 'https://es6-features.org/' }
                 ],
                 project: {
-                    name: 'Interactive Portfolio Enhancement',
-                    description: 'Enhance your Week 1 static portfolio website by adding interactive elements. Implement an image carousel, a dynamic navigation menu (e.g., hamburger menu for mobile), and client-side form validation using both vanilla JavaScript and jQuery. Practice making AJAX calls for mock data (e.g., loading project details from a JSON file).',
-                    test_objective: 'Verify all interactive elements function correctly across different browsers. Ensure form validation provides immediate user feedback. Check the browser console for any JavaScript errors. Consider how sensitive data might be handled in JavaScript if it were directly exposed in the DOM (conceptual).'
+                    name: 'Data-Driven Kambaz Application (Part 1: Client-side)',
+                    description: 'Refactor the Kambaz prototype to be data-driven. Implement dynamic content rendering for Kambaz Navigation, Dashboard, Course, Modules, and Assignments screens using JavaScript arrays and objects as local "database" (e.g., `courses.json`, `modules.json`, `assignments.json`, `users.json`, `enrollments.json`). Use React Router to handle data-driven navigation, parsing course/assignment IDs from URLs. Implement a basic Todo List application using `useState` and array manipulation (add, delete, update, edit).',
+                    test_objective: 'Verify that the Kambaz UI dynamically updates based on the local JSON data. Ensure navigation between courses and sections correctly reflects the data in the URL. Confirm the Todo List functions correctly with add, delete, and edit operations.'
                 },
-                cybersecurity_aspects: 'Review client-side data exposure: what information should *never* be directly visible or manipulable via client-side JavaScript (e.g., API keys, sensitive user IDs). Introduction to sanitizing output (even for display) to prevent basic XSS from client-side dynamic content that originates from "trusted" sources.'
+                cybersecurity_aspects: 'Review client-side data exposure: Emphasize that sensitive information (e.g., API keys, private user IDs, raw passwords) should *never* be stored directly in client-side JavaScript or local JSON files, even if for prototyping. Discuss the implications of `JSON.stringify()` for debugging and potential accidental exposure of data. Reinforce concepts of input sanitization when dynamically injecting data into the DOM.'
             },
             { 
                 week: 3, 
-                focus: 'Node.js & Express.js Basics', 
+                focus: 'Maintaining State in React Applications (Chapter 4 - useState & Redux)', 
                 objectives: [
-                    'Understand Node.js as a JavaScript runtime environment for server-side development.',
-                    'Learn to use npm (Node Package Manager) for managing project dependencies and scripts.',
-                    'Set up a basic web server using the Express.js framework.',
-                    'Define and handle different routes (GET, POST, PUT, DELETE) in Express.js.',
-                    'Grasp the core principles of RESTful APIs (resource-based, statelessness, proper HTTP verb usage).',
-                    'Use tools like Postman or Insomnia to send requests and test API endpoints.'
+                    'Understand state management in React applications (component vs. application state).',
+                    'Handle user input with controlled components and two-way data binding.',
+                    'Use the `useState` hook for component-level state management (integers, booleans, strings, dates, objects, arrays).',
+                    'Understand and handle user events (clicks, form changes), including the event object.',
+                    'Manage application-wide state using Redux: store, actions, reducers, dispatch, and selectors (using Redux Toolkit).',
+                    'Implement data-driven CRUD (Create, Read, Update, Delete) operations for courses, modules, and assignments using React `useState` and then migrate to Redux for application-wide state.'
+                ], 
+                resources: [
+                    { name: 'React Official Documentation (State & Hooks)', link: 'https://react.dev/learn/preserving-and-resetting-state' },
+                    { name: 'Redux Fundamentals (Official Docs)', link: 'https://redux.js.org/tutorials/essentials/part-1-overview-concepts' },
+                    { name: 'React Redux Hooks (`useSelector`, `useDispatch`)', link: 'https://react-redux.js.org/api/hooks' }
+                ],
+                project: {
+                    name: 'Kambaz Application with Full State Management',
+                    description: 'Refactor the Kambaz application to implement full CRUD operations for courses, modules, and assignments using React `useState` initially for component-level state, then migrate to Redux for application-wide state management. Implement modals for adding/editing modules. Update the Dashboard to filter courses based on a simulated "current user" from Redux state. Implement protected routes so certain screens (Dashboard, Courses) are only accessible if a user is "signed in" via Redux state. Implement Account Navigation that conditionally shows/hides Signin/Signup/Profile links based on authentication status. Develop the Profile screen to display and edit current user information from Redux.',
+                    test_objective: 'Verify all CRUD operations (add, edit, delete) for courses, modules, and assignments persist within the Redux store. Ensure protected routes correctly redirect unauthenticated users. Confirm conditional rendering of navigation links and content based on user authentication and role. Test user sign-in and sign-out functionality, observing state changes and UI updates.'
+                },
+                cybersecurity_aspects: 'Deep dive into authentication and authorization. Implementing secure password hashing (conceptual, as actual hashing happens server-side). Discuss JWT security best practices, including using a strong secret and expiration, and the trade-offs between storing tokens in LocalStorage vs. HttpOnly cookies to mitigate XSS impact. Emphasize that role-based access control (hiding/showing UI elements based on user role) is a UX feature, and *true* authorization checks must happen on the backend. Protecting routes and content based on user roles and authentication status.'
+            },
+            { 
+                week: 4, 
+                focus: 'Implementing RESTful APIs with Express.js (Chapter 5)', 
+                objectives: [
+                    'Install and configure a Node.js HTTP server using Express.js.',
+                    'Implement RESTful Web Service APIs with various HTTP methods (GET, POST, PUT, DELETE).',
+                    'Understand `req.params` and `req.query` for parsing request parameters.',
+                    'Implement server-side logic for a data-driven application (e.g., Todo List CRUD operations).',
+                    'Learn to use `app.listen()` to start the server and handle basic HTTP requests.',
+                    'Set up CORS (Cross-Origin Resource Sharing) to allow frontend applications to communicate with the backend.',
+                    'Deploy RESTful APIs to a public remote server (e.g., Render).'
                 ], 
                 resources: [
                     { name: 'Node.js Official Documentation', link: 'https://nodejs.org/en/docs/' },
                     { name: 'Express.js Documentation', link: 'https://expressjs.com/' },
-                    { name: 'Postman Learning Center (API Testing Basics)', link: 'https://www.postman.com/learning-center/' },
-                    { name: 'MDN Web Docs: HTTP Overview', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP' },
-                    { name: 'RESTful API Tutorial (conceptual)', link: 'https://restfulapi.net/' }
+                    { name: 'CORS Explained', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS' },
+                    { name: 'Postman Learning Center (API Testing)', link: 'https://www.postman.com/learning-center/' },
+                     { name: 'Render Deployment Docs', link: 'https://render.com/docs/deploy-node-express-app' }
                 ],
                 project: {
-                    name: 'Simple To-Do RESTful API',
-                    description: 'Build a basic RESTful API with Node.js and Express.js. Create endpoints for managing a list of "to-do" items (e.g., `/todos`). Implement GET (all, by ID), POST, PUT, and DELETE operations. Initially, store data in a simple JavaScript array or object (no database yet).',
-                    test_objective: 'Use Postman/Insomnia to test all API endpoints and verify they respond correctly with appropriate HTTP status codes and JSON data. Security Test: Attempt to send malformed requests (e.g., very large payloads, unexpected data types). Observe what kind of error messages your server returns. Are they too verbose (e.g., exposing stack traces or internal server details)? Ensure your Express app limits request payload size (e.g., `express.json({ limit: \'1mb\' })`).'
+                    name: 'Kambaz Backend API (No-Database Prototype)',
+                    description: 'Build a Node.js Express API to serve data for the Kambaz application. Implement endpoints for courses, modules, assignments, and users. Initially, store all data in in-memory JavaScript arrays/objects (no database yet). Implement GET (all, by ID), POST, PUT, and DELETE operations for these resources. Configure CORS to allow your React frontend to connect. Deploy this Node.js Express server to a cloud service like Render.',
+                    test_objective: 'Use Postman/Insomnia to thoroughly test all API endpoints for correct HTTP methods, status codes, and JSON responses. Ensure data manipulation (create, update, delete) works as expected on the in-memory data. Verify the API is accessible from your deployed Netlify frontend.'
                 },
-                cybersecurity_aspects: 'Server-side validation importance: Emphasize that client-side validation is insufficient for security and that all input must be validated on the server. Introduce the concept of information disclosure through verbose error messages (stack traces). Basic prevention of Denial of Service (DoS) by handling large request payloads and setting appropriate timeouts in Express.'
-            },
-            { 
-                week: 4, 
-                focus: 'Frontend Frameworks: React.js Fundamentals', 
-                objectives: [
-                    'Understand the concept and benefits of Single Page Applications (SPAs).',
-                    'Set up a basic React project using Create React App or Vite.',
-                    'Learn to build reusable UI components using React\'s component-based architecture.',
-                    'Master JSX (JavaScript XML) syntax for defining UI elements.',
-                    'Clearly differentiate between `props` (data passed from parent) and `state` (internal component data) and apply them correctly.',
-                    'Implement conditional rendering and efficient list rendering (e.g., using `map` and `key` props).'
-                ], 
-                resources: [
-                    { name: 'React Official Documentation (Main Concepts)', link: 'https://react.dev/learn' },
-                    { name: 'freeCodeCamp.org: Front End Development Libraries Certification (React sections)', link: 'https://www.freecodecamp.org/learn/front-end-development-libraries/' },
-                    { name: 'Create React App (or Vite) Documentation', link: 'https://create-react-app.dev/' }
-                ],
-                project: {
-                    name: 'Basic React SPA from Static Content',
-                    description: 'Convert a section of your Week 1 static website (e.g., the Projects page) into a basic React SPA. Break the UI into reusable components (e.g., ProjectCard component). Manage any dynamic content on the page (e.g., filtering projects) using component-level state and pass data down via props. Do not connect to an external API yet; use static JSON data within your React app.',
-                    test_objective: 'Verify that the React components render correctly and manage their internal state as expected. Test component reusability by using the same component multiple times with different props. Consider how sensitive static content might be rendered and if `dangerouslySetInnerHTML` is used (and if it is, understand its implications for XSS).'
-                },
-                cybersecurity_aspects: 'Understanding how React renders content and the potential for client-side XSS if external data (even if static for now) is not properly sanitized before being injected into JSX, especially when using `dangerouslySetInnerHTML`. Reinforce client-side sanitization concepts and the idea that client-side rendering can still introduce vulnerabilities.'
+                cybersecurity_aspects: 'Server-side validation is *critical*: Emphasize that client-side validation is easily bypassed; all incoming data to the API must be rigorously validated and sanitized on the server to prevent various injection attacks (e.g., ensuring numeric fields are indeed numbers, string lengths are within limits). Discuss information disclosure: avoid sending verbose error messages (stack traces, internal details) in production environments. Implement basic rate limiting (conceptual) to mitigate brute-force attacks. Understanding CORS and its security implications for cross-origin requests.'
             },
             { 
                 week: 5, 
-                focus: 'React State Management & Routing', 
+                focus: 'Integrating React with MongoDB (Chapter 6)', 
                 objectives: [
-                    'Implement client-side routing in a React application using React Router (e.g., `BrowserRouter`, `Routes`, `Route`, `Link`).',
-                    'Understand the problem of "prop drilling" and how global state management solves it.',
-                    'Grasp the core concepts of Redux: Store, Actions, Reducers, Dispatch, and Selectors.',
-                    'Implement a simple Redux store to manage global application state (e.g., a simple counter, user authentication status, or theme preference).',
-                    'Explore the React Context API as a lighter alternative for managing global state for smaller applications or less complex data.'
+                    'Understand NoSQL databases, specifically MongoDB and its document-oriented model.',
+                    'Work with a local MongoDB instance and MongoDB Atlas Cloud Service.',
+                    'Program with MongoDB using Mongoose.js (defining schemas, models, performing CRUD operations).',
+                    'Integrate the Node.js Express API with MongoDB, replacing in-memory data storage with database interactions.',
+                    'Refactor existing API endpoints to perform asynchronous database operations using `async/await`.',
+                    'Update React frontend components to consume data from the now database-backed API.',
+                    'Implement basic error handling for API calls in both frontend and backend.'
                 ], 
                 resources: [
-                    { name: 'React Router Documentation', link: 'https://reactrouter.com/en/main' },
-                    { name: 'Redux Fundamentals (Official Docs)', link: 'https://redux.js.org/tutorials/essentials/part-1-overview-concepts' },
-                    { name: 'React Context API (React Docs)', link: 'https://react.dev/learn/passing-props-with-context' }
-                ],
-                project: {
-                    name: 'React SPA with Routing and Global State',
-                    description: 'Enhance your Week 4 React SPA. Implement client-side routing to navigate between different "pages" (e.g., Home, About, Projects). Integrate Redux for simple global state management. For example, create a "theme" toggle (light/dark mode) or a simple "user status" (logged in/out) that is accessible and changeable from different components without prop drilling. Alternatively, add a global counter that can be incremented from various parts of the app.',
-                    test_objective: 'Verify navigation between routes functions correctly without full page reloads. Ensure the global state (e.g., theme) persists and updates consistently across different routes/components. Security Test: If simulating authentication, ensure no sensitive user credentials (e.g., raw passwords, full API keys) are directly stored in the Redux store or React Context API. Understand *why* storing tokens in HttpOnly cookies is generally safer than in JavaScript-accessible storage (conceptual).'
-                },
-                cybersecurity_aspects: 'Secure state management: Discuss the implications of storing sensitive data (e.g., authentication tokens, API keys, private user IDs) directly in client-side state accessible via JavaScript (e.g., Redux store, LocalStorage). Introduce the concept of HttpOnly cookies for session management as a way to mitigate the impact of Cross-Site Scripting (XSS) on session tokens.'
-            },
-            { 
-                week: 6, 
-                focus: 'Database Integration: MongoDB & Mongoose.js', 
-                objectives: [
-                    'Understand the fundamental concepts of NoSQL databases, specifically document-oriented databases like MongoDB.',
-                    'Learn how data is structured in MongoDB (documents, collections, embedded vs. referenced data).',
-                    'Perform basic CRUD (Create, Read, Update, Delete) operations directly in MongoDB shell.',
-                    'Utilize Mongoose.js, an ODM (Object Data Modeling) library, to define schemas and models for MongoDB interactions from Node.js applications.',
-                    'Connect your Node.js/Express API to a MongoDB database.',
-                    'Implement API endpoints that perform full CRUD operations on the database.'
-                ], 
-                resources: [
-                    { name: 'MongoDB Documentation (Getting Started)', link: 'https://www.mongodb.com/docs/manual/getting-started/' },
+                    { name: 'MongoDB Documentation', link: 'https://www.mongodb.com/docs/manual/' },
                     { name: 'Mongoose.js Documentation', link: 'https://mongoosejs.com/docs/' },
-                    { name: 'Node.js & MongoDB Tutorials (e.g., freeCodeCamp, Net Ninja)', link: 'https://www.freecodecamp.org/news/learn-mongodb-node-js-in-a-week-from-scratch/' }
+                    { name: 'MongoDB Atlas', link: 'https://www.mongodb.com/atlas' },
+                    { name: 'MDN Web Docs: async/await', link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function' }
                 ],
                 project: {
-                    name: 'Full-Stack To-Do App (MERN Stack)',
-                    description: 'Connect your Week 3 To-Do API to a MongoDB database using Mongoose. Refactor the API endpoints to interact with the database instead of an in-memory array. Then, build a new React frontend (or adapt your Week 5 SPA) to consume this API, creating a full-stack MERN (MongoDB, Express, React, Node) application.',
-                    test_objective: 'Verify end-to-end functionality: creating a to-do item in the React app should persist it in MongoDB and correctly display it. Security Test: Test for NoSQL injection vulnerabilities. Try to pass object-based queries (e.g., `{"$gt": ""}`) in request parameters where a simple string is expected. Ensure Mongoose schemas provide basic type validation and that your server-side logic properly validates and sanitizes all input before it reaches the database query.'
+                    name: 'Full-Stack Kambaz with MongoDB',
+                    description: 'Transition the Kambaz backend API to use MongoDB as its persistent data store, leveraging Mongoose.js for ODM. Create Mongoose schemas and models for courses, modules, assignments, and users. Update all API routes (GET, POST, PUT, DELETE) to interact with MongoDB asynchronously. Refactor the React frontend to make `fetch` requests to this persistent backend. Ensure full CRUD functionality works end-to-end with the database. Implement the Assignments screen and Assignment Editor to fully utilize database interaction.',
+                    test_objective: 'Verify that all data manipulations (create, update, delete) persist across server restarts and page reloads. Test all API endpoints against the MongoDB instance. Ensure data displayed in the frontend matches the data in the database. Verify that "On Your Own" assignments (Assignments, Assignment Editor, People) are fully functional with database integration, including the ability for faculty to manage content and students to view it.'
                 },
-                cybersecurity_aspects: 'Introduction to NoSQL injection and the importance of using an ODM like Mongoose with strong schema validation. Emphasize that user input should never be directly concatenated into database queries. All input must be validated and sanitized on the server before database interaction.'
+                cybersecurity_aspects: 'NoSQL Injection: Emphasize that direct user input must *never* be used in MongoDB queries without proper sanitization and the use of Mongoose with schema validation and parameter binding. Discuss the importance of environment variables for storing sensitive database credentials (e.g., MongoDB connection URI) and *never* hardcoding them or committing them to source control. Implement basic error handling to prevent sensitive database errors from being exposed to the client.'
             },
-            {
-                week: 7,
-                focus: 'Web Security & Authentication',
+             { 
+                week: 6, 
+                focus: 'Web Security & Authentication (Chapter 4 & 5 - Advanced)', 
                 objectives: [
-                    'Understand common vulnerabilities: XSS, CSRF, and SQL/NoSQL Injection.',
-                    'Learn the principles of secure password storage using hashing and salting (e.g., with bcrypt).',
-                    'Implement user registration and login functionality in your Node.js/Express API.',
-                    'Understand and implement session management using JWT (JSON Web Tokens).',
-                    'Create protected routes in your API that require a valid JWT for access.',
-                    'Integrate authentication state into your React application to show different content to logged-in vs. logged-out users.'
-                ],
+                    'Understand and implement secure user authentication (registration, login, logout) on the backend.',
+                    'Learn secure password storage techniques (hashing with bcrypt - conceptual).',
+                    'Implement session management using JSON Web Tokens (JWT) for authentication.',
+                    'Create protected API routes that require valid JWTs for access.',
+                    'Understand Cross-Origin Resource Sharing (CORS) in depth and configure it securely.',
+                    'Implement user authorization based on roles (e.g., Faculty vs. Student) to control access to API resources.',
+                    'Integrate authentication and authorization into the React frontend, conditionally rendering UI elements and protecting routes.'
+                ], 
                 resources: [
-                    { name: 'OWASP Top 10 (Critical Web Application Security Risks)', link: 'https://owasp.org/www-project-top-ten/' },
+                    { name: 'OWASP Top 10', link: 'https://owasp.org/www-project-top-ten/' },
                     { name: 'JSON Web Tokens (JWT) Introduction', link: 'https://jwt.io/introduction' },
                     { name: 'MDN Web Docs: Cross-Origin Resource Sharing (CORS)', link: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS' },
-                    { name: 'PortSwigger Web Security Academy (Labs on XSS, CSRF)', link: 'https://portswigger.net/web-security' },
-                    { name: 'Jest Documentation (JavaScript Testing Framework)', link: 'https://jestjs.io/docs/en/getting-started' },
-                    { name: 'Supertest (for testing Node.js APIs)', link: 'https://www.npmjs.com/package/supertest' },
-                    { name: 'Angular Documentation (Conceptual Overview)', link: 'https://angular.io/docs' }
+                    { name: 'bcrypt.js (for password hashing)', link: 'https://www.npmjs.com/package/bcrypt' }
                 ],
                 project: {
-                    name: 'Secure the To-Do App with User Accounts',
-                    description: 'Add user authentication to your full-stack To-Do app. Implement registration and login endpoints that generate JWTs. Secure the API so that users can only view and manage their own to-do items. On the React frontend, create login/registration forms and manage the user\'s authentication state (e.g., storing the JWT securely and using it for API requests).',
-                    test_objective: 'Test that protected API routes return an error (e.g., 401 Unauthorized) without a valid JWT. Verify that one user cannot access or modify another user\'s data. Security Test: Check if JWTs are stored in a way that minimizes XSS risk (e.g., HttpOnly cookies are preferred over LocalStorage). Ensure error messages for failed logins are generic ("Invalid credentials") to prevent username enumeration.'
+                    name: 'Secure Kambaz with User Authentication & Authorization',
+                    description: 'Add full user authentication and authorization to the Kambaz application. Implement user registration and login endpoints on the Node.js Express backend, using secure password hashing (conceptually, or integrate a library like bcrypt.js). Issue JWTs upon successful login. Secure all relevant API routes (e.g., for creating/updating/deleting courses, modules, assignments) to require a valid JWT. Implement authorization middleware on the backend to enforce role-based access (e.g., only "FACULTY" can modify data). On the React frontend, integrate login/registration forms, manage user authentication state using Redux, send JWTs with API requests, and conditionally render UI elements/protect client-side routes based on user role and authentication status. Implement the "Enrollments" feature (on your own section) with persistence, reflecting user enrollment status.',
+                    test_objective: 'Verify that only registered users can log in. Test that protected API routes correctly deny access without a valid JWT or with an invalid one. Confirm that non-faculty users cannot perform faculty-only operations (e.g., add/edit/delete courses) even if they try to bypass client-side UI. Ensure JWTs are handled securely (e.g., stored in HttpOnly cookies if applicable, though LocalStorage is used for simple examples). Test the persistence of enrollment changes after refresh/relogin.'
                 },
-                cybersecurity_aspects: 'Deep dive into authentication vs. authorization. Cover secure password hashing with bcrypt. Discuss JWT security best practices, including using a strong secret key, setting an expiration time, and the trade-offs between storing tokens in LocalStorage vs. HttpOnly cookies to mitigate XSS.'
+                cybersecurity_aspects: 'SQL/NoSQL Injection: Continued emphasis on parameterized queries and ORM/ODM usage to prevent injection. XSS: Reiterate the dangers of rendering unsanitized user input in React. CSRF: Introduce CSRF tokens (conceptual) or refer to alternative mitigation strategies. Secure Session Management: Discuss the importance of JWT expiration, refresh tokens (conceptual), and proper storage. Error Handling: Configure robust error handling to prevent information leakage from the backend. Security Headers: Introduce concepts like Helmet.js for setting various HTTP security headers (X-XSS-Protection, Content-Security-Policy, etc.). Best practices for configuring CORS securely.'
+            },
+             {
+                week: 7,
+                focus: 'Advanced Backend & APIs (Implicit from document)',
+                objectives: [
+                    'Review and solidify understanding of Node.js, Express.js, and MongoDB/Mongoose.js interactions.',
+                    'Implement more complex API functionalities as needed for advanced Kambaz features (e.g., managing user enrollments, potentially more complex data relationships).',
+                    'Understand and apply `useEffect` hook for handling side effects in React (e.g., fetching data from APIs on component mount).',
+                    'Refine error handling and user feedback mechanisms for API interactions.',
+                    'Prepare code for deployment and continuous integration (Git branching strategies, .gitignore configuration).'
+                ],
+                resources: [
+                    { name: 'MDN Web Docs: Fetch API', link: 'https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API' },
+                    { name: 'Node.js Express Advanced Topics', link: 'https://expressjs.com/en/advanced/best-practice-security.html' },
+                    { name: 'React `useEffect` Hook', link: 'https://react.dev/reference/react/useEffect' }
+                ],
+                project: {
+                    name: 'Kambaz Feature Expansion & Refinement',
+                    description: 'Based on the provided content, refine and expand existing Kambaz features. This includes ensuring all "On Your Own" sections related to Assignments and People screens (displaying users enrolled in a course, full CRUD for assignments) are fully implemented and integrated with the database and authentication/authorization. Implement robust client-side `fetch` calls with `useEffect` to manage asynchronous data loading. Focus on a clean and maintainable codebase, following best practices for both frontend and backend development.',
+                    test_objective: 'Ensure all features (including "On Your Own" sections) are fully functional and integrated end-to-end. Verify data consistency between frontend and backend. Check for any unhandled errors or unexpected behavior during data interactions. Confirm that the application is ready for deployment, with no sensitive information hardcoded.'
+                },
+                cybersecurity_aspects: 'Secure Coding Practices: Emphasize consistent input validation, output encoding, and proper use of security features in frameworks (e.g., Mongoose schema validation). Secure Deployment: Reinforce the use of environment variables for all secrets. Logging & Monitoring: Briefly touch on the importance of logging security-relevant events for auditing and incident response. Vulnerability Scanning: Mention tools for identifying common web vulnerabilities (e.g., SAST/DAST tools - conceptual).'
             },
             {
                 week: 8,
-                focus: 'Advanced Topics & Deployment',
+                focus: 'Deployment & Deliverables (Chapter 1, 2, 3, 4, 5, 6 - Deliverables sections)',
                 objectives: [
-                    'Understand the basics of unit testing and Test-Driven Development (TDD).',
-                    'Write simple unit tests for your Express API endpoints using a framework like Jest.',
-                    'Learn about environment variables and how to manage them for development vs. production (e.g., database connection strings, API keys).',
-                    'Containerize your Node.js application using Docker.',
-                    'Prepare and deploy your full-stack application to a cloud service (e.g., Heroku, Render, AWS).',
-                    'Review and consolidate all concepts, ensuring you can explain the flow of data through a full-stack application.'
+                    'Consolidate all learned concepts into a complete full-stack MERN application.',
+                    'Ensure adherence to Git/GitHub branching strategies for assignments (`a2`, `a3`, `a4`, `a6` branches).',
+                    'Successfully deploy the React frontend to Netlify, configuring continuous deployment for branches.',
+                    'Successfully deploy the Node.js Express backend to a public remote server (e.g., Render), ensuring integration with the Netlify frontend.',
+                    'Confirm all lab exercises, Mongoose schemas, models, DAOs, and React components function as described.',
+                    'Prepare all deliverables as specified for submission (URLs, full name in Labs/index.tsx, GitHub repository link).'
                 ],
                 resources: [
-                    { name: 'Jest Documentation (JavaScript Testing Framework)', link: 'https://jestjs.io/docs/en/getting-started' },
-                    { name: 'Supertest (for testing Node.js APIs)', link: 'https://www.npmjs.com/package/supertest' },
-                    { name: 'Docker Documentation', link: 'https://docs.docker.com/' },
-                    { name: 'Heroku Getting Started (or similar cloud platform)', link: 'https://devcenter.heroku.com/categories/getting-started' }
+                    { name: 'Netlify Deployment Docs', link: 'https://docs.netlify.com/configure-builds/get-started/' },
+                    { name: 'Render Deployment Docs', link: 'https://render.com/docs' },
+                    { name: 'GitHub Guides', link: 'https://guides.github.com/' },
+                    { name: 'MDN HTML 5 Specification', link: 'https://html.spec.whatwg.org' },
+                    { name: 'W3C Standards', link: 'https://www.w3.org' }
                 ],
                 project: {
-                    name: 'Deploy the Full-Stack Application',
-                    description: 'Write unit tests for the core logic of your API (e.g., testing the login and to-do creation endpoints). Create a Dockerfile for your Node.js backend. Configure environment variables for production. Deploy both your React frontend and your Express backend to a cloud platform. Ensure they can communicate with each other and the cloud-hosted MongoDB instance.',
-                    test_objective: 'Verify the deployed application is fully functional. All API calls from the live frontend should work correctly with the live backend. Ensure environment variables are not hard-coded or committed to version control. Security Test: Perform a final check. Are there any debug routes left open? Are error messages appropriate for production? Is HTTPS enforced?'
+                    name: 'Final Kambaz Application Deployment',
+                    description: 'Ensure the entire Kambaz application is fully functional, all previous lab exercises are complete, and both the React frontend and Node.js backend are deployed to their respective cloud platforms. Confirm the integration between frontend and backend, including database interactions. All assigned deliverables (code branches, deployment URLs, GitHub links, personal details) must be meticulously prepared for submission.',
+                    test_objective: 'Perform a full end-to-end regression test of the deployed application. Verify all features (CRUD, authentication, authorization, navigation) work remotely. Check deployment configurations (environment variables, branch deployments). Ensure all specified deliverables are correctly prepared for submission, including the specific `a6` branch deployment for Netlify and Render integration.'
                 },
-                cybersecurity_aspects: 'Securing the deployment environment. The importance of not committing secrets (API keys, passwords, JWT secrets) to Git, using environment variables instead. The principle of least privilege for database users. Setting security headers (e.g., with Helmet.js in Express) and ensuring the production environment uses HTTPS.'
+                cybersecurity_aspects: 'Production Hardening: Review overall security posture before final deployment. Ensure no debugging features are exposed in production. Confirm HTTPS is enforced. Continuous Security: Emphasize the ongoing nature of security; new vulnerabilities can arise. Importance of keeping dependencies updated. Final check for hardcoded credentials or sensitive information anywhere in the codebase (both frontend and backend).'
             }
         ],
         resources: [
@@ -475,7 +463,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     { name: "React.js Docs", description: "The official documentation for React, which has been significantly improved for learning.", link: "https://react.dev/" },
                     { name: "Express.js", description: "The minimalist web framework for Node.js used extensively in the course.", link: "https://expressjs.com/" },
                     { name: "MongoDB & Mongoose", description: "Official documentation for the NoSQL database and its most popular ODM library for Node.js.", link: "https://www.mongodb.com/docs/" },
-                    { name: "Tailwind CSS", description: "A utility-first CSS framework for rapidly building custom user interfaces.", link: "https://tailwindcss.com/" }
+                    { name: "Tailwind CSS", description: "A utility-first CSS framework for rapidly building custom user interfaces.", link: "https://tailwindcss.com/" },
+                     { name: "Redux Toolkit", description: "The official, opinionated, batteries-included toolset for efficient Redux development.", link: "https://redux-toolkit.js.org/" }
+                ]
+            },
+             {
+                category: "Security Resources",
+                items: [
+                    { name: "OWASP Top 10", description: "A standard awareness document for developers and web application security.", link: "https://owasp.org/www-project-top-ten/" },
+                    { name: "PortSwigger Web Security Academy", description: "Interactive labs to learn about web vulnerabilities like XSS, SQLi, and more.", link: "https://portswigger.net/web-security" },
+                    { name: "JWT.io", description: "Tools and information for understanding and debugging JSON Web Tokens.", link: "https://jwt.io/" }
                 ]
             }
         ]
@@ -530,11 +527,11 @@ document.addEventListener('DOMContentLoaded', () => {
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Frontend (React, Angular)', 'Backend (Node, Java)', 'Databases (Mongo, SQL)', 'DevOps & Tools (Git, Docker)'],
+                    labels: ['Frontend (React)', 'Backend (Node.js/Express.js)', 'Databases (MongoDB/Mongoose)', 'Version Control (Git/GitHub)', 'State Management (Redux)', 'Deployment (Netlify/Render)'],
                     datasets: [{
                         label: 'Course Focus',
-                        data: [40, 30, 20, 10],
-                        backgroundColor: [ '#4F9A94', '#68B0AB', '#81C6C2', '#9ADCD9' ],
+                        data: [25, 20, 15, 10, 15, 15],
+                        backgroundColor: [ '#4F9A94', '#68B0AB', '#81C6C2', '#9ADCD9', '#B3E8E6', '#CCF3F1' ],
                         borderColor: '#f8f7f4',
                         borderWidth: 4,
                         hoverOffset: 10
@@ -565,10 +562,10 @@ document.addEventListener('DOMContentLoaded', () => {
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['JavaScript (Frontend/Backend)', 'Java (Backend Persistence)'],
+                    labels: ['JavaScript (Frontend/Backend)', 'Java (Backend Persistence - Note: This course focuses on MERN, Java mentioned for industry context)'],
                     datasets: [{
                         label: 'Language Use in Projects',
-                        data: [75, 25],
+                        data: [80, 20], // Adjusted based on MERN focus
                         backgroundColor: [ '#4F9A94', '#9ADCD9' ],
                         borderColor: '#ffffff',
                         borderWidth: 4,
@@ -608,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h4 class="font-bold text-lg text-slate-800">${topic.title}</h4>
                         <p class="text-slate-600 text-sm mt-1">${topic.summary}</p>
                     </div>
-                    <svg class="w-5 h-5 text-slate-400 mt-1 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg class="w-5 h-5 text-slate-400 mt-1 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
                 <div class="topic-details hidden mt-4 pt-4 border-t border-slate-200">
                     <p class="text-slate-600 text-sm">${topic.details}</p>
@@ -708,7 +705,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <summary class="font-semibold text-lg text-slate-800 cursor-pointer list-none">
                             <div class="flex justify-between items-center">
                                 <span>Week ${week.week}: ${week.focus}</span>
-                                <svg class="w-5 h-5 text-slate-400 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                <svg class="w-5 h-5 text-slate-400 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </summary>
                         <div class="mt-4 pt-4 border-t border-slate-200 space-y-3">
